@@ -241,9 +241,8 @@ uint32_t initAHB_AP()
 	uint32_t IDR_Val, temp;
 	pwrUp_sys_dbg();
 	IDR_Val = swdReadAP(AHB_AP, AHB_AP_IDR);
-	temp = swdReadPacket(AP, AHB_AP_CSW);
-	temp = (swdReadPacket(DP, SW_DP_RDBUFF) & 0xfffffff8) | CSW_SIZE_2;
-	swdWriteAP(AHB_AP, AHB_AP_CSW, CSW_SIZE_2);
+	temp = swdReadAP(AHB_AP, AHB_AP_CSW);
+	swdWriteAP(AHB_AP, AHB_AP_CSW, temp | CSW_SIZE_2);
 	return IDR_Val;
 }
 
@@ -259,4 +258,24 @@ void swdWriteMem32(uint32_t addr, uint32_t data)
 {
 	swdWriteAP(AHB_AP, AHB_AP_TAR, addr);
 	swdWriteAP(AHB_AP, AHB_AP_DRW, data);
+}
+
+uint32_t swdSystemResetAndHaltCore(void)
+{
+	swdWriteMem32(CORTEX_DHCSR, DBGKEY | C_HALT | C_DEBUGEN);
+	swdWriteMem32(CORTEX_DEMCR, TRCENA | VC_CORERESET);
+	swdWriteMem32(CORTEX_AIRCR, VECTKEY | SYSRESETREQ);
+	return swdReadMem32(CORTEX_DHCSR);
+}
+
+uint32_t swdReadCoreReg(CoreRegister reg)
+{
+	swdWriteMem32(CORTEX_DCRSR, REG_READ | reg);
+	return swdReadMem32(CORTEX_DCRDR);
+}
+
+void swdWriteCoreReg(CoreRegister reg, uint32_t data)
+{
+	swdWriteMem32(CORTEX_DCRDR, data);
+	swdWriteMem32(CORTEX_DCRSR, REG_WRITE | reg);
 }

@@ -39,13 +39,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f1xx_hal.h"
+
+/* USER CODE BEGIN Includes */
 #include "swdLowLevel.h"
 #include "SWD.h"
 #include "CException.h"
 #include "Exception.h"
-
-/* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -76,7 +75,7 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	volatile uint32_t ID, IDR_val, CPU_ID, data;
+	volatile uint32_t ID, IDR_val, CPU_ID, data, csw;
 	CEXCEPTION_T ex;
 
   /* USER CODE END 1 */
@@ -104,13 +103,19 @@ int main(void)
   swdWriteBits(0b101010, 6);
   ID = swdInitTap();
   IDR_val = initAHB_AP();
-  data = swdReadAP(AHB_AP, AHB_AP_CSW);
-  swdWriteMem32(0x12345678, 0x20001010);
-  swdWriteMem32(0xbadface, 0x20001014);
-  data = swdReadMem32(0x12345678);
-  data = swdReadMem32(0xbadface);
+  csw = swdReadAP(AHB_AP, AHB_AP_CSW);
   CPU_ID = swdReadMem32(0xE0042000);
   CPU_ID = swdReadMem32(0xE000ED00);
+
+  data = swdSystemResetAndHaltCore();
+  swdWriteMem32(0x20001010, 0x12345678);
+  swdWriteMem32(0x20001014, 0xbadface);
+  data = swdReadMem32(0x20001010);
+  data = swdReadMem32(0x20001014);
+
+  swdWriteCoreReg(R5, 0xfe110);
+  data = swdReadCoreReg(R5);
+
   swdWritePacket(AP, 0xcd, 0x12345678);	// dummy
   } Catch (ex) {
 	  freeError(ex);
