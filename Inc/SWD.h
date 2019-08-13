@@ -38,6 +38,23 @@ typedef enum {
   R15,
 } CoreRegister;
 
+typedef enum {
+  TARGET_NOT_READY,
+  TARGET_READY,
+  WRITE_DATA,
+  MASS_ERASE,
+  PAGE_ERASE,
+} commandState;
+
+typedef struct flashState flashState;
+struct flashState {
+	commandState command;
+	uint32_t dataAddr;
+	int blockSize;
+	uint32_t flashAddr;
+	int dataSize;
+};
+
 #define AP				1
 #define DP				0
 

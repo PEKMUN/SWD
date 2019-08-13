@@ -116,6 +116,8 @@ int main(void)
   swdWriteCoreReg(R5, 0xfe110);
   data = swdReadCoreReg(R5);
 
+  HAL_FLASH_Unlock();
+  FLASH_PageErase(0x08001000);
   swdWritePacket(AP, 0xcd, 0x12345678);	// dummy
   } Catch (ex) {
 	  freeError(ex);

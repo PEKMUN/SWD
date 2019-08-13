@@ -1,10 +1,8 @@
-Src/Exception.o: ../Src/Exception.c \
- C:/Students/OPM/STM32/SWD/Inc/Exception.h \
- C:/Students/OPM/STM32/SWD/Inc/CException.h \
- C:/Students/OPM/STM32/SWD/Inc/CExceptionConfig.h
+Src/Exception.o: ../Src/Exception.c C:/opm/SWD/Inc/Exception.h \
+ C:/opm/SWD/Inc/CException.h C:/opm/SWD/Inc/CExceptionConfig.h
 
-C:/Students/OPM/STM32/SWD/Inc/Exception.h:
+C:/opm/SWD/Inc/Exception.h:
 
-C:/Students/OPM/STM32/SWD/Inc/CException.h:
+C:/opm/SWD/Inc/CException.h:
 
-C:/Students/OPM/STM32/SWD/Inc/CExceptionConfig.h:
+C:/opm/SWD/Inc/CExceptionConfig.h:
