@@ -1,13 +1,15 @@
-Src/SWD.o: ../Src/SWD.c C:/opm/SWD/Inc/SWD.h C:/opm/SWD/Inc/swdLowLevel.h \
- C:/opm/SWD/Inc/CException.h C:/opm/SWD/Inc/CExceptionConfig.h \
- C:/opm/SWD/Inc/Exception.h
+Src/SWD.o: ../Src/SWD.c C:/Students/OPM/STM32/SWD/Inc/SWD.h \
+ C:/Students/OPM/STM32/SWD/Inc/swdLowLevel.h \
+ C:/Students/OPM/STM32/SWD/Inc/CException.h \
+ C:/Students/OPM/STM32/SWD/Inc/CExceptionConfig.h \
+ C:/Students/OPM/STM32/SWD/Inc/Exception.h
 
-C:/opm/SWD/Inc/SWD.h:
+C:/Students/OPM/STM32/SWD/Inc/SWD.h:
 
-C:/opm/SWD/Inc/swdLowLevel.h:
+C:/Students/OPM/STM32/SWD/Inc/swdLowLevel.h:
 
-C:/opm/SWD/Inc/CException.h:
+C:/Students/OPM/STM32/SWD/Inc/CException.h:
 
-C:/opm/SWD/Inc/CExceptionConfig.h:
+C:/Students/OPM/STM32/SWD/Inc/CExceptionConfig.h:
 
-C:/opm/SWD/Inc/Exception.h:
+C:/Students/OPM/STM32/SWD/Inc/Exception.h:

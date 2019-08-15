@@ -177,8 +177,8 @@ void swdWriteAP(uint8_t ApSel, uint8_t addr, uint32_t data)
 {
 	uint8_t bankSel, temp;
 	temp = addr;
-	bankSel = temp & 0xf0;
-	if((sel & 0xf0) != ((ApSel << 24) | bankSel))
+	bankSel = temp & 0xff;
+	if((sel & 0xff0000ff) != ((ApSel << 24) | bankSel))
 	{
 		sel = (sel & 0x00ffff0f) | bankSel | (ApSel << 24);
 		swdWritePacket(DP, SW_DP_SELECT, sel);
@@ -279,3 +279,22 @@ void swdWriteCoreReg(CoreRegister reg, uint32_t data)
 	swdWriteMem32(CORTEX_DCRDR, data);
 	swdWriteMem32(CORTEX_DCRSR, REG_WRITE | reg);
 }
+
+/*void flashCheckState(commandState cmd, uint32_t flashAddr, int dataSize)
+{
+	flashState *flash;
+	flash->blockSize = 2048;
+	flash = (flashState *)malloc(flash->blockSize);
+	flash->dataAddr = &flash;
+
+	flash->command = TARGET_READY;
+
+	flash->flashAddr = flashAddr;
+	flash->dataSize = dataSize;
+
+	switch(cmd)
+	{
+		case WRITE_DATA:
+
+	}
+}*/

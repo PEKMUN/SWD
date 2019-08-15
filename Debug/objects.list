@@ -13,6 +13,7 @@
 "Src/CException.o"
 "Src/Exception.o"
 "Src/SWD.o"
+"Src/UnityErrorHandler.o"
 "Src/main.o"
 "Src/stm32f1xx_hal_msp.o"
 "Src/stm32f1xx_it.o"

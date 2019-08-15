@@ -112,6 +112,7 @@ int main(void)
   swdWriteMem32(0x20001014, 0xbadface);
   data = swdReadMem32(0x20001010);
   data = swdReadMem32(0x20001014);
+  data = swdReadMem32(0x8000000);
 
   swdWriteCoreReg(R5, 0xfe110);
   data = swdReadCoreReg(R5);

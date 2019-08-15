@@ -5,6 +5,7 @@
 #include "Exception.h"
 #include "SWD.h"
 #include "mock_swdLowLevel.h"
+#include "UnityErrorHandler.h"
 
 swdSeq *seqPtr = NULL;
 int seqIndex = 0, seqBit = 0;
@@ -240,6 +241,22 @@ void test_swdReadBits_and_swdWriteTurnAround_given_0b111_expect_proper_swd_seque
 	verifySwdSequence();
 }
 
+void test_swdReadBits_and_swdWriteTurnAround_given_0b110_expect_proper_swd_sequence(void)
+{
+  swdSeq seq[] = {
+    {SWD_READ, 0b110, 3},
+    {SWD_WRITE_TURN_AROUND, 0, 0},
+    {SWD_SEQ_END, 0, 0},
+  };
+  
+  swdFakeSeq(seq);
+  
+  TEST_ASSERT_EQUAL(6, swdReadBits(3));
+  swdWriteTurnAround();
+  
+	verifySwdSequence();
+}
+
 void test_swdWritePacket_given_AP_ADDR_2_DATA_0x12345678_expect_proper_swd_sequence(void)
 {
   swdSeq seq[] = {
@@ -270,6 +287,7 @@ void test_swdWritePacket_given_AP_ADDR_2_DATA_0x12345678_expect_proper_swd_seque
 void test_swdResetIntoSwdMode_expect_proper_swd_sequence(void)
 {
   swdSeq seq[] = {
+    {SWD_WRITE_TURN_AROUND, 0, 0},
 		{SWD_WRITE, 0x3ffffffffffff, 50},
 		{SWD_WRITE, 0xe79e, 16},
 		{SWD_WRITE, 0x3ffffffffffff, 50},
@@ -292,9 +310,9 @@ void test_swdReadPacket_given_SWD_IDCODE_expect_return_correct_idcode(void)
   swdSeq seq[] = {
 		{SWD_WRITE, 0xa5, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
 		{SWD_READ, 0x1BA00477, 32},
-    {SWD_READ, 0, 1},
+    {SWD_READ, 1, 1},
     {SWD_WRITE_TURN_AROUND, 0, 0},
 		{SWD_WRITE, 0, 3},
 		{SWD_SEQ_END, 0, 0},
@@ -319,9 +337,9 @@ void test_swdReadPacket_given_SWD_IDCODE_expect_a_fault_return(void)
   swdSeq seq[] = {
 		{SWD_WRITE, 0xa5, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b001, 3},
+    {SWD_READ, 0b100, 3},
 		{SWD_READ, 0x1BA00477, 32},
-    {SWD_READ, 0, 1},
+    {SWD_READ, 1, 1},
     {SWD_WRITE_TURN_AROUND, 0, 0},
 		{SWD_WRITE, 0, 3},
 		{SWD_SEQ_END, 0, 0},
@@ -349,7 +367,7 @@ void test_swdReadPacket_given_SWD_IDCODE_expect_a_wait_return(void)
 		{SWD_READ_TURN_AROUND, 0, 0},
     {SWD_READ, 0b010, 3},
 		{SWD_READ, 0x1BA00477, 32},
-    {SWD_READ, 0, 1},
+    {SWD_READ, 1, 1},
     {SWD_WRITE_TURN_AROUND, 0, 0},
 		{SWD_WRITE, 0, 3},
 		{SWD_SEQ_END, 0, 0},
@@ -374,7 +392,7 @@ void test_swdWritePacket_given_0xbad0face_expect_proper_swd_sequence(void)
   swdSeq seq[] = {
 		{SWD_WRITE, 0b10011001, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0xbad0face, 32},
     {SWD_WRITE, 1, 1},
@@ -399,7 +417,7 @@ void test_swdWritePacket_given_0xbad0face_expect_a_fault_return(void)
   swdSeq seq[] = {
 		{SWD_WRITE, 0b10011001, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b001, 3},
+    {SWD_READ, 0b100, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0xbad0face, 32},
     {SWD_WRITE, 1, 1},
@@ -456,9 +474,9 @@ void test_swdReadDP_given_SWD_IDCODE_expect_return_correct_idcode(void)
     //  1   |  0   |        |    |    | 1/0 |  1/0  | 1
 		{SWD_WRITE, 0xa5, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
 		{SWD_READ, 0x1BA00477, 32},
-    {SWD_READ, 0, 1},
+    {SWD_READ, 1, 1},
     {SWD_WRITE_TURN_AROUND, 0, 0},
 		{SWD_WRITE, 0, 3},
 		{SWD_SEQ_END, 0, 0},
@@ -488,7 +506,7 @@ void test_swdReadDP_given_0xfc_expect_return_0x12345678(void)
     //  1    |  0   |         |     |     | 1/0  |  1/0		|		1
     {SWD_WRITE, 0b10110001, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0xff00000f, 32},
     {SWD_WRITE, 0, 1},
@@ -496,7 +514,7 @@ void test_swdReadDP_given_0xfc_expect_return_0x12345678(void)
     // SWD Read Packet
 		{SWD_WRITE, 0b10111101, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
 		{SWD_READ, 0x12345678, 32},
     {SWD_READ, 1, 1},
     {SWD_WRITE_TURN_AROUND, 0, 0},
@@ -525,7 +543,7 @@ void test_swdWriteDP_given_SW_DP_CTRL_STAT_expect_proper_swd_sequence(void)
   swdSeq seq[] = {
     {SWD_WRITE, 0xa9, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0x50000000, 32},
     {SWD_WRITE, 0, 1},
@@ -554,7 +572,7 @@ void test_swdWriteDP_given_SWD_IDCODE_or_0x2_expect_proper_swd_sequence(void)
 		// write packet 1
 		{SWD_WRITE, 0b10110001, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0xff000000, 32},
     {SWD_WRITE, 0, 1},
@@ -562,7 +580,7 @@ void test_swdWriteDP_given_SWD_IDCODE_or_0x2_expect_proper_swd_sequence(void)
 		// write packet 2
     {SWD_WRITE, 0b10000001, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0x12345678, 32},
     {SWD_WRITE, 1, 1},
@@ -592,7 +610,7 @@ void test_swdReadAP_given_AHB_AP_IDR_expect_return_correct_IDR_value(void)
     // SWD Write Packet
     {SWD_WRITE, 0xb1, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0xf0, 32},
     {SWD_WRITE, 0, 1},
@@ -600,7 +618,15 @@ void test_swdReadAP_given_AHB_AP_IDR_expect_return_correct_IDR_value(void)
     // SWD Read Packet
 		{SWD_WRITE, 0x9f, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
+		{SWD_READ, 0x24770011, 32},
+    {SWD_READ, 0, 1},
+    {SWD_WRITE_TURN_AROUND, 0, 0},
+		{SWD_WRITE, 0, 3},
+    // SWD Read Packet
+		{SWD_WRITE, 0xbd, 8},
+		{SWD_READ_TURN_AROUND, 0, 0},
+    {SWD_READ, 0b001, 3},
 		{SWD_READ, 0x24770011, 32},
     {SWD_READ, 0, 1},
     {SWD_WRITE_TURN_AROUND, 0, 0},
@@ -628,9 +654,18 @@ void test_swdReadAP_given_AHB_AP_IDR_and_select_equal_0xf0_expect_return_correct
   uint32_t IDR_val;
   
   swdSeq seq[] = {
+    // Read packet 1
 		{SWD_WRITE, 0x9f, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
+		{SWD_READ, 0x24770011, 32},
+    {SWD_READ, 0, 1},
+    {SWD_WRITE_TURN_AROUND, 0, 0},
+		{SWD_WRITE, 0, 3},
+		// Read packet 2
+    {SWD_WRITE, 0xbd, 8},
+		{SWD_READ_TURN_AROUND, 0, 0},
+    {SWD_READ, 0b001, 3},
 		{SWD_READ, 0x24770011, 32},
     {SWD_READ, 0, 1},
     {SWD_WRITE_TURN_AROUND, 0, 0},
@@ -659,7 +694,7 @@ void test_swdWriteAP_given_AHB_AP_CSW_expect_proper_swd_sequence(void)
   swdSeq seq[] = {
     {SWD_WRITE, 0xa3, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0x2, 32},
     {SWD_WRITE, 1, 1},
@@ -688,7 +723,7 @@ void test_swdWriteAP_given_AHB_AP_CSW_and_select_0xff000034_expect_proper_swd_se
 		// Write packet 1
 		{SWD_WRITE, 0b10110001, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0x00000004, 32},
     {SWD_WRITE, 1, 1},
@@ -696,7 +731,7 @@ void test_swdWriteAP_given_AHB_AP_CSW_and_select_0xff000034_expect_proper_swd_se
 		// Write packet 2
     {SWD_WRITE, 0xa3, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0x2, 32},
     {SWD_WRITE, 1, 1},
@@ -724,7 +759,7 @@ void test_swdWriteAP_given_select_0x0200002a_expect_return_same_value(void)
   swdSeq seq[] = {
     {SWD_WRITE, 0b10010011, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0x12345678, 32},
     {SWD_WRITE, 1, 1},
@@ -738,7 +773,7 @@ void test_swdWriteAP_given_select_0x0200002a_expect_return_same_value(void)
   swdFakeSeq(seq);
   
   Try {
-    swdWriteAP(0x2, (0x2 << 4) | (0x2 << 2), 0x12345678);
+    swdWriteAP(0x2, (0x2 << 24) | (0x2 << 4) | 0xa, 0x12345678);
 		TEST_ASSERT_EQUAL(0x0200002a, sel);
   } Catch(ex) {
     TEST_FAIL_MESSAGE(ex->errorMsg);
@@ -753,7 +788,7 @@ void test_swdWriteAP_given_select_0x0200002a_and_write_APSEL_0x1_expect_select_e
 		// Write packet 1
 		{SWD_WRITE, 0b10110001, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0x0100002a, 32},
     {SWD_WRITE, 0, 1},
@@ -761,7 +796,7 @@ void test_swdWriteAP_given_select_0x0200002a_and_write_APSEL_0x1_expect_select_e
 		// Write packet 2
     {SWD_WRITE, 0b10010011, 8},
 		{SWD_READ_TURN_AROUND, 0, 0},
-    {SWD_READ, 0b100, 3},
+    {SWD_READ, 0b001, 3},
     {SWD_WRITE_TURN_AROUND, 0, 0},
     {SWD_WRITE, 0x12345678, 32},
     {SWD_WRITE, 1, 1},
