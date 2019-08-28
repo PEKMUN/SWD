@@ -1,6 +1,6 @@
 #include "swdLowLevel.h"
 #include "main.h"
-//#include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal.h"
 
 void swdDelay(volatile uint32_t cycles)
 {

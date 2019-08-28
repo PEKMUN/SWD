@@ -43,6 +43,7 @@
 /* USER CODE BEGIN Includes */
 #include "swdLowLevel.h"
 #include "SWD.h"
+#include "FlashProgramming.h"
 #include "CException.h"
 #include "Exception.h"
 /* USER CODE END Includes */
@@ -64,7 +65,25 @@ static void MX_GPIO_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+void swdMassErase()
+{
+	uint32_t PageError;
+	HAL_FLASH_Unlock();
+	HAL_FLASHEx_Erase(FLASH_TYPEERASE_MASSERASE, &PageError);
+	HAL_FLASH_Lock();
+}
 
+// Page erase ==> FLASH_PageErase(uint32_t PageAddress)
+void swdPageErase(uint32_t pageAddress, int numOfSector)
+{
+	HAL_FLASH_Unlock();
+	for(int i=0 ; i<numOfSector ; i++)
+	{
+		FLASH_PageErase(pageAddress);
+		pageAddress+=FLASH_PAGE_SIZE;
+	}
+	HAL_FLASH_Lock();
+}
 /* USER CODE END 0 */
 
 /**
@@ -77,7 +96,17 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	volatile uint32_t ID, IDR_val, CPU_ID, data, csw;
 	CEXCEPTION_T ex;
+	volatile int doMassErase=0;
+	volatile int doPageErase=0;
+	FlashState flashState;
 
+	if(doPageErase) {
+	  swdPageErase(flashState.sector, flashState.numOfSector);
+	}
+
+	if(doMassErase) {
+	  swdMassErase();
+	}
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -116,6 +145,8 @@ int main(void)
 
   swdWriteCoreReg(R5, 0xfe110);
   data = swdReadCoreReg(R5);
+
+  swdWriteFlash(0x8006000, "hello world", 12);
 
   HAL_FLASH_Unlock();
   FLASH_PageErase(0x08001000);

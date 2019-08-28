@@ -6,6 +6,7 @@
 C_SRCS += \
 ../Src/CException.c \
 ../Src/Exception.c \
+../Src/FlashProgramming.c \
 ../Src/SWD.c \
 ../Src/UnityErrorHandler.c \
 ../Src/main.c \
@@ -17,6 +18,7 @@ C_SRCS += \
 OBJS += \
 ./Src/CException.o \
 ./Src/Exception.o \
+./Src/FlashProgramming.o \
 ./Src/SWD.o \
 ./Src/UnityErrorHandler.o \
 ./Src/main.o \
@@ -28,6 +30,7 @@ OBJS += \
 C_DEPS += \
 ./Src/CException.d \
 ./Src/Exception.d \
+./Src/FlashProgramming.d \
 ./Src/SWD.d \
 ./Src/UnityErrorHandler.d \
 ./Src/main.d \

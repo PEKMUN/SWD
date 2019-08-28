@@ -23,6 +23,7 @@ Src/main.o: ../Src/main.c C:/Students/OPM/STM32/SWD/Inc/main.h \
  C:/Students/OPM/STM32/SWD/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
  C:/Students/OPM/STM32/SWD/Inc/swdLowLevel.h \
  C:/Students/OPM/STM32/SWD/Inc/SWD.h \
+ C:/Students/OPM/STM32/SWD/Inc/FlashProgramming.h \
  C:/Students/OPM/STM32/SWD/Inc/CException.h \
  C:/Students/OPM/STM32/SWD/Inc/CExceptionConfig.h \
  C:/Students/OPM/STM32/SWD/Inc/Exception.h
@@ -76,6 +77,8 @@ C:/Students/OPM/STM32/SWD/Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
 C:/Students/OPM/STM32/SWD/Inc/swdLowLevel.h:
 
 C:/Students/OPM/STM32/SWD/Inc/SWD.h:
+
+C:/Students/OPM/STM32/SWD/Inc/FlashProgramming.h:
 
 C:/Students/OPM/STM32/SWD/Inc/CException.h:
 

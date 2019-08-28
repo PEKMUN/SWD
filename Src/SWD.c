@@ -279,22 +279,3 @@ void swdWriteCoreReg(CoreRegister reg, uint32_t data)
 	swdWriteMem32(CORTEX_DCRDR, data);
 	swdWriteMem32(CORTEX_DCRSR, REG_WRITE | reg);
 }
-
-/*void flashCheckState(commandState cmd, uint32_t flashAddr, int dataSize)
-{
-	flashState *flash;
-	flash->blockSize = 2048;
-	flash = (flashState *)malloc(flash->blockSize);
-	flash->dataAddr = &flash;
-
-	flash->command = TARGET_READY;
-
-	flash->flashAddr = flashAddr;
-	flash->dataSize = dataSize;
-
-	switch(cmd)
-	{
-		case WRITE_DATA:
-
-	}
-}*/
