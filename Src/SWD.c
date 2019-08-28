@@ -279,3 +279,14 @@ void swdWriteCoreReg(CoreRegister reg, uint32_t data)
 	swdWriteMem32(CORTEX_DCRDR, data);
 	swdWriteMem32(CORTEX_DCRSR, REG_WRITE | reg);
 }
+
+void swdReadMemBlock(uint8_t *dst, uint32_t targetMem, int len)
+{
+	dst = (uint8_t *)targetMem;
+	volatile uint8_t buffer1[128];
+	for(int i=0 ; i<len ; i++)
+	{
+		buffer1[i] = *dst;
+		dst++;
+	}
+}

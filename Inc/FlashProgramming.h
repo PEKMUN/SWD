@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#define KB						1024
+#define TRANFER_BUFFER_SIZE		(2*KB)
+
 typedef enum {
   TARGET_NOT_READY,
   TARGET_READY,
@@ -22,6 +25,6 @@ struct FlashState {
 	int numOfSector;
 };
 
-void swdWriteFlash(uint8_t targetFlashAddr, uint8_t *data, int len);
+void swdWriteFlash(uint32_t targetFlashAddr, uint32_t *data, int len);
 
 #endif // _FLASHPROGRAMMING_H

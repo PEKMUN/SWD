@@ -153,6 +153,7 @@ void swdWriteMem32(uint32_t addr, uint32_t data);
 uint32_t swdSystemResetAndHaltCore(void);
 uint32_t swdReadCoreReg(CoreRegister reg);
 void swdWriteCoreReg(CoreRegister reg, uint32_t data);
+void swdReadMemBlock(uint8_t *dst, uint32_t targetMem, int len);
 
 //Export Variable
 extern uint32_t sel;

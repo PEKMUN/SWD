@@ -99,6 +99,7 @@ int main(void)
 	volatile int doMassErase=0;
 	volatile int doPageErase=0;
 	FlashState flashState;
+	uint8_t dst;
 
 	if(doPageErase) {
 	  swdPageErase(flashState.sector, flashState.numOfSector);
@@ -147,6 +148,7 @@ int main(void)
   data = swdReadCoreReg(R5);
 
   swdWriteFlash(0x8006000, "hello world", 12);
+  swdReadMemBlock(&dst, 0x20000220, 12);
 
   HAL_FLASH_Unlock();
   FLASH_PageErase(0x08001000);
