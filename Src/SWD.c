@@ -280,6 +280,12 @@ void swdWriteCoreReg(CoreRegister reg, uint32_t data)
 	swdWriteMem32(CORTEX_DCRSR, REG_WRITE | reg);
 }
 
+void swdWrite8(uint32_t addr, uint8_t data)
+{
+	int *ptr = (int *)addr;
+	*ptr = data;
+}
+
 void swdReadMemBlock(uint8_t *dst, uint32_t targetMem, int len)
 {
 	dst = (uint8_t *)targetMem;

@@ -65,6 +65,7 @@ static void MX_GPIO_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+
 void swdMassErase()
 {
 	uint32_t PageError;
@@ -147,6 +148,7 @@ int main(void)
   swdWriteCoreReg(R5, 0xfe110);
   data = swdReadCoreReg(R5);
 
+  transferBuffer[12] = "hello world";
   swdWriteFlash(0x8006000, "hello world", 12);
   swdReadMemBlock(&dst, 0x20000220, 12);
 

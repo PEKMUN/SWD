@@ -10,13 +10,13 @@
 uint8_t transferBuffer[TRANFER_BUFFER_SIZE];
 FlashState *monitorState = 0x200001b4;
 
-void swdWriteFlash(uint32_t targetFlashAddr, uint32_t *data, int len)
+void swdWriteFlash(uint32_t targetFlashAddr, uint8_t *data, int len)
 {
-	uint32_t *src = (uint32_t *)swdReadMem32(&monitorState->dataAddr);
+	uint8_t *src = (uint8_t *)swdReadMem32(&monitorState->dataAddr);
 	while(monitorState->command==TARGET_NOT_READY);
-	for(int i=0 ; i<(len/4) ; i++)
+	for(int i=0 ; i<len ; i++)
 	{
-		swdWriteMem32(src, *data);
+		swdWrite8(src, *data);
 		data++;
 		src++;
 	}
