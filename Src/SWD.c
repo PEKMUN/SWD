@@ -1,5 +1,6 @@
 #include "SWD.h"
 #include "swdLowLevel.h"
+#include "FlashProgramming.h"
 #include "CException.h"
 #include "Exception.h"
 #include <malloc.h>
@@ -268,6 +269,11 @@ uint32_t swdSystemResetAndHaltCore(void)
 	return swdReadMem32(CORTEX_DHCSR);
 }
 
+void swdUnhaltCore(void)
+{
+	swdWriteMem32(CORTEX_DHCSR, DBGKEY);
+}
+
 uint32_t swdReadCoreReg(CoreRegister reg)
 {
 	swdWriteMem32(CORTEX_DCRSR, REG_READ | reg);
@@ -286,13 +292,16 @@ void swdWrite8(uint32_t addr, uint8_t data)
 	*ptr = data;
 }
 
-void swdReadMemBlock(uint8_t *dst, uint32_t targetMem, int len)
+void swdReadMemBlock(uint32_t *volatile dst, uint32_t targetMem, int len)
 {
-	dst = (uint8_t *)targetMem;
-	volatile uint8_t buffer1[128];
-	for(int i=0 ; i<len ; i++)
+	commandState currentCmd;
+
+	do {
+		currentCmd = swdReadMem32(&monitorState->command);
+	} while(currentCmd!=TARGET_READY);
+	for(int i=0 ; i<len/4 ; i++)
 	{
-		buffer1[i] = *dst;
+		*dst = swdReadMem32(targetMem);
 		dst++;
 	}
 }

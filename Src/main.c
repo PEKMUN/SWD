@@ -99,11 +99,11 @@ int main(void)
 	CEXCEPTION_T ex;
 	volatile int doMassErase=0;
 	volatile int doPageErase=0;
-	FlashState flashState;
-	uint8_t dst;
+	volatile uint32_t buffer1[128];
+	uint32_t *dst = buffer1;
 
 	if(doPageErase) {
-	  swdPageErase(flashState.sector, flashState.numOfSector);
+	  swdPageErase(0x8006000, 2);
 	}
 
 	if(doMassErase) {
@@ -139,8 +139,8 @@ int main(void)
   CPU_ID = swdReadMem32(0xE000ED00);
 
   data = swdSystemResetAndHaltCore();
-  swdWriteMem32(0x20001010, 0x12345678);
-  swdWriteMem32(0x20001014, 0xbadface);
+  //swdWriteMem32(0x20001010, 0x12345678);
+  //swdWriteMem32(0x20001014, 0xbadface);
   data = swdReadMem32(0x20001010);
   data = swdReadMem32(0x20001014);
   data = swdReadMem32(0x8000000);
@@ -148,9 +148,16 @@ int main(void)
   swdWriteCoreReg(R5, 0xfe110);
   data = swdReadCoreReg(R5);
 
-  transferBuffer[12] = "hello world";
-  swdWriteFlash(0x8006000, "hello world", 12);
-  swdReadMemBlock(&dst, 0x20000220, 12);
+  swdUnhaltCore();
+  swdWriteMem32(0x20001010, 0x98765432);
+  swdWriteMem32(0x20001014, 0xbadface);
+  data = swdReadMem32(0x20001010);
+  data = swdReadMem32(0x20001014);
+
+  data = swdReadMem32(0x8000000);
+  swdWriteFlash(0x8006100, "hello world", 12);
+  swdReadMemBlock(&dst, swdReadMem32(&monitorState->dataAddr), 12);
+  swdReadMemBlock(&dst, 0x8006100, 12);
 
   HAL_FLASH_Unlock();
   FLASH_PageErase(0x08001000);

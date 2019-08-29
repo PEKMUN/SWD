@@ -80,7 +80,7 @@ typedef enum {
 
 // CSW reg
 #define CSW_AddrInc_Inc_Single		(1 << 5)
-#define CSW_SIZE_2					      (2 << 0)
+#define CSW_SIZE_2					(2 << 0)
 
 //Nested Vectored Interrupt Controller
 #define CORTEX_AIRCR				0xE000ED0C
@@ -88,10 +88,10 @@ typedef enum {
 //Application Interrupt and Reset Control Register
 #define VECTKEY						(0xFA05 << 16)
 #define VECTKEYSTAT										    // for read (Reads as 0xFA05)
-#define ENDIANESS					(1 << 15)			  // big endian, 0 = little endian
-#define SYSRESETREQ				(1 << 2)
-#define VECTCLRACTIVE			(1 << 1)  			// clear all state information for active NMI, fault, and interrupts
-#define VECTRESET					(1 << 0)			  // reset system
+#define ENDIANESS					(1 << 15)				// big endian, 0 = little endian
+#define SYSRESETREQ					(1 << 2)
+#define VECTCLRACTIVE				(1 << 1)				// clear all state information for active NMI, fault, and interrupts
+#define VECTRESET					(1 << 0)				// reset system
 
 //core debug
 #define CORTEX_DHCSR				0xE000EDF0
@@ -101,14 +101,14 @@ typedef enum {
 
 //core debug reg (DHCSR)
 #define DBGKEY						(0xA05F << 16)		//Debug Key
-#define S_RESET_ST			  (1 << 25)
-#define S_RETIRE_ST				(1 << 24)
+#define S_RESET_ST					(1 << 25)
+#define S_RETIRE_ST					(1 << 24)
 #define S_LOCKUP					(1 << 19)
 #define S_SLEEP						(1 << 18)
 #define S_HALT						(1 << 17)
 #define S_REGRDY					(1 << 16)
-#define C_SNAPSTALL				(1 << 5)
-#define C_MASKINTS				(1 << 3)
+#define C_SNAPSTALL					(1 << 5)
+#define C_MASKINTS					(1 << 3)
 #define C_STEP						(1 << 2)
 #define C_HALT						(1 << 1)
 #define C_DEBUGEN					(1 << 0)
@@ -119,14 +119,14 @@ typedef enum {
 
 //core debug reg (DEMCR)
 #define TRCENA						(1 << 24)
-#define VC_HARDERR				(1 << 10)
+#define VC_HARDERR					(1 << 10)
 #define VC_INTERR					(1 << 9)
 #define VC_BUSERR					(1 << 8)
-#define VC_STATERR				(1 << 7)
+#define VC_STATERR					(1 << 7)
 #define VC_CHKERR					(1 << 6)
-#define VC_NOCPERR				(1 << 5)
+#define VC_NOCPERR					(1 << 5)
 #define VC_MMERR					(1 << 4)
-#define VC_CORERESET			(1 << 0)
+#define VC_CORERESET				(1 << 0)
 
 void fake_swdWriteBit(int oneBitData, int callNum);
 int fake_swdReadBit(int callNum);
@@ -151,10 +151,11 @@ uint32_t initAHB_AP();
 uint32_t swdReadMem32(uint32_t addr);
 void swdWriteMem32(uint32_t addr, uint32_t data);
 uint32_t swdSystemResetAndHaltCore(void);
+void swdUnhaltCore(void);
 uint32_t swdReadCoreReg(CoreRegister reg);
 void swdWriteCoreReg(CoreRegister reg, uint32_t data);
 void swdWrite8(uint32_t addr, uint8_t data);
-void swdReadMemBlock(uint8_t *dst, uint32_t targetMem, int len);
+void swdReadMemBlock(uint32_t *volatile dst, uint32_t targetMem, int len);
 
 //Export Variable
 extern uint32_t sel;

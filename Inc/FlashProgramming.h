@@ -26,6 +26,7 @@ struct FlashState {
 };
 
 extern uint8_t transferBuffer[];
-void swdWriteFlash(uint32_t targetFlashAddr, uint8_t *data, int len);
+extern FlashState *monitorState;
+void swdWriteFlash(uint32_t targetFlashAddr, uint32_t *data, int len);
 
 #endif // _FLASHPROGRAMMING_H
