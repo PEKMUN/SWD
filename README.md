@@ -23,3 +23,12 @@ STM32 Smart V2 MCU - [link](https://stm32-base.org/assets/img/boards/STM32F103C8
 - Last MCU is target
 
 ## Setup in STM32CubeMX
+![](https://github.com/PEKMUN/SWD/blob/master/image/cubeMX.jpg)
+
+**Pin Configuration:**
+
+![](https://github.com/PEKMUN/SWD/blob/master/image/pin_configuration.JPG)
+- PB13 is for SWCLK pin
+- PB14 is for SWDIO pin
+
+## 1. SWD Protocol
