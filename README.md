@@ -17,3 +17,9 @@ STM32 Smart V2 MCU - [link](https://stm32-base.org/assets/img/boards/STM32F103C8
 - Notepad++
 
 ## Circuit Connection
+![](https://github.com/PEKMUN/SWD/blob/master/image/circuit.jpg)
+- First MCU is PC
+- Second MCU is SWD probe
+- Last MCU is target
+
+## Setup in STM32CubeMX
