@@ -292,7 +292,7 @@ void swdWrite8(uint32_t addr, uint8_t data)
 	*ptr = data;
 }
 
-void swdReadMemBlock(uint32_t *volatile dst, uint32_t targetMem, int len)
+/*void swdReadMemBlock(uint32_t *volatile dst, uint32_t targetMem, int len)
 {
 	commandState currentCmd;
 
@@ -305,3 +305,4 @@ void swdReadMemBlock(uint32_t *volatile dst, uint32_t targetMem, int len)
 		dst++;
 	}
 }
+*/
